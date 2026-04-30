@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register SipMas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="card">
+    <h2>SipMas</h2>
+
+    <form method="POST">
+
+        <input type="text" name="nama" placeholder="Masukkan Nama Lengkap" required>
+
+        <input type="email" name="email" placeholder="Masukkan Email" required>
+
+        <input type="text" name="no_hp" placeholder="No. HP" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <input type="password" name="confirm_password" placeholder="Konfirmasi Password" required>
+
+        <button type="submit">Daftar</button>
+
+    </form>
+
+    <p>Sudah punya akun? <a href="/">Login</a></p>
+</div>
+
+</body>
+</html>

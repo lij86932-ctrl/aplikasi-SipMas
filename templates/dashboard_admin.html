@@ -1,0 +1,17 @@
+<h2>Dashboard Petugas</h2>
+
+<table border="1">
+<tr>
+    <th>Judul</th>
+    <th>Status</th>
+    <th>Aksi</th>
+</tr>
+
+{% for d in data %}
+<tr>
+    <td>{{ d[3] }}</td>
+    <td>{{ d[7] }}</td>
+    <td><a href="/update/{{ d[0] }}">Selesaikan</a></td>
+</tr>
+{% endfor %}
+</table>

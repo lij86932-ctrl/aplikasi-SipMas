@@ -1,0 +1,23 @@
+<h2>Tambah Pengaduan</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Judul">
+    <textarea name="deskripsi"></textarea>
+    <input type="text" name="address">
+
+    <select name="priority">
+        <option>rendah</option>
+        <option>sedang</option>
+        <option>tinggi</option>
+    </select>
+
+    <select name="category_id">
+        {% for k in kategori %}
+        <option value="{{ k[0] }}">{{ k[1] }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="file" name="file">
+
+    <button>Kirim</button>
+</form>

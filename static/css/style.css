@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: linear-gradient(to right, #8EC5FC, #E0C3FC);
+}
+
+/* LOGIN CARD */
+.card {
+    width: 350px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin: auto;
+    margin-top: 100px;
+    text-align: center;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #6CA8FF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    width: 100%;
+}
+
+/* DASHBOARD */
+.dashboard {
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background: #2f4f6f;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+.card-box {
+    display: flex;
+    gap: 10px;
+}
+
+.box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+}
+
+.status {
+    padding: 5px;
+    border-radius: 10px;
+    color: white;
+}
+
+.menunggu { background: orange; }
+.proses { background: blue; }
+.selesai { background: green; }
