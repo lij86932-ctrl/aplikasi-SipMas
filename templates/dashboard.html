@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Masyarakat - SipMas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <svg width="50" height="50" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M40 5L15 17.5V35C15 52.5 25.5 67.5 40 72.5C54.5 67.5 65 52.5 65 35V17.5L40 5Z" 
+                              stroke="#1e3a8a" stroke-width="3" fill="none"/>
+                        <rect x="25" y="25" width="30" height="22" rx="3" fill="#1e3a8a"/>
+                        <path d="M32 36L37 41L48 30" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="32" cy="58" r="4" fill="#1e3a8a"/>
+                        <circle cx="40" cy="56" r="5" fill="#1e3a8a"/>
+                        <circle cx="48" cy="58" r="4" fill="#1e3a8a"/>
+                    </svg>
+                </div>
+                <h3>SipMas</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Beranda</span>
+                </a>
+                <a href="{{ url_for('form_pengaduan') }}" class="nav-item">
+                    <i class="fas fa-edit"></i>
+                    <span>Form pengaduan</span>
+                </a>
+                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Pengaduan saya</span>
+                </a>
+                <a href="{{ url_for('riwayat') }}" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Dashboard Masyarakat</h1>
+            </div>
+
+            <div class="welcome-section">
+                <h2>Selamat datang, {{ user_nama }}!</h2>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card stat-blue">
+                    <div class="stat-header">
+                        <span>Total Pengaduan</span>
+                        <div class="stat-dot"></div>
+                    </div>
+                    <div class="stat-number">{{ stats.total_pengaduan }}</div>
+                </div>
+
+                <div class="stat-card stat-teal">
+                    <div class="stat-header">
+                        <span>Dalam Proses</span>
+                        <div class="stat-dot"></div>
+                    </div>
+                    <div class="stat-number">{{ stats.dalam_proses }}</div>
+                </div>
+
+                <div class="stat-card stat-green">
+                    <div class="stat-header">
+                        <span>Selesai</span>
+                        <div class="stat-dot"></div>
+                    </div>
+                    <div class="stat-number">{{ stats.selesai }}</div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-section">
+                <h3>Daftar Pengaduan Terbaru</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pengaduan</th>
+                                <th>Judul Pengaduan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pengaduan in pengaduan_list %}
+                            <tr>
+                                <td>{{ pengaduan.id }}</td>
+                                <td>{{ pengaduan.judul }}</td>
+                                <td>
+                                    <span class="status-badge {% if 'Menunggu' in pengaduan.status %}status-waiting{% elif 'Diproses' in pengaduan.status %}status-process{% else %}status-done{% endif %}">
+                                        {{ pengaduan.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-selesai">Selesai</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

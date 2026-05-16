@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Pengaduan - SipMas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <i class="fas fa-shield-alt logo-icon"></i>
+                    <h3>SipMas</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-item">
+                    <i class="fas fa-home"></i><span>Beranda</span>
+                </a>
+                <a href="{{ url_for('pengaduan_list') }}" class="nav-item active">
+                    <i class="fas fa-list"></i><span>Daftar Pengaduan</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
+                    <i class="fas fa-sign-out-alt"></i><span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="card content-card" style="max-width: 800px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2>Detail Pengaduan #{{ pengaduan.id }}</h2>
+                    <a href="{{ url_for('pengaduan_list') }}" class="btn-outline">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-row">
+                        <label>Judul:</label>
+                        <p><strong>{{ pengaduan.judul }}</strong></p>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <label>Deskripsi:</label>
+                        <p>{{ pengaduan.deskripsi }}</p>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <label>Lokasi:</label>
+                        <p>{{ pengaduan.lokasi }}</p>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <label>Status:</label>
+                        <span class="badge badge-{{ 'blue' if pengaduan.status == 'Menunggu Verification' else 'warning' if pengaduan.status == 'Sedang Diproses' else 'green' }}">
+                            {{ pengaduan.status }}
+                        </span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <label>Pelapor:</label>
+                        <p>
+                            {% if pengaduan.anonim == 1 %}
+                                <span class="anonim-badge"><i class="fas fa-user-secret"></i> Anonim</span>
+                            {% else %}
+                                {{ pengaduan.nama_lengkap }} ({{ pengaduan.username }})
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    {% if pengaduan.no_hp and pengaduan.anonim == 0 %}
+                    <div class="detail-row">
+                        <label>No. HP:</label>
+                        <p>{{ pengaduan.no_hp }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="detail-row">
+                        <label>Tanggal Dibuat:</label>
+                        <p>{{ pengaduan.created_at.strftime('%d %B %Y, %H:%M') }}</p>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <label>Terakhir Diupdate:</label>
+                        <p>{{ pengaduan.updated_at.strftime('%d %B %Y, %H:%M') }}</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <a href="{{ url_for('edit_pengaduan', id=pengaduan.id) }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{{ url_for('hapus_pengaduan', id=pengaduan.id) }}" 
+                       class="btn btn-danger"
+                       onclick="return confirm('Yakin ingin menghapus?')">
+                        <i class="fas fa-trash"></i> Hapus
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

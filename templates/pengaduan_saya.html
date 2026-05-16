@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaduan Saya - SipMas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <i class="fas fa-shield-alt logo-icon"></i>
+                    <h3>SipMas</h3>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-item">
+                    <i class="fas fa-home"></i><span>Beranda</span>
+                </a>
+                <a href="{{ url_for('form_pengaduan') }}" class="nav-item">
+                    <i class="fas fa-edit"></i><span>Form pengaduan</span>
+                </a>
+                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item active">
+                    <i class="fas fa-folder"></i><span>Pengaduan saya</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-history"></i><span>Riwayat</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
+                    <i class="fas fa-sign-out-alt"></i><span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Pengaduan Saya</h1>
+            </div>
+
+            <div class="card content-card">
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <input type="text" placeholder="Cari pengaduan...">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <select class="filter-select">
+                        <option>Keterangan</option>
+                        <option>Sedang Diproses</option>
+                        <option>Selesai</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Status</option>
+                        <option>Menunggu Verification</option>
+                        <option>Selesai</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Rentang Tanggal</option>
+                        <option>7 Hari Terakhir</option>
+                        <option>30 Hari Terakhir</option>
+                        <option>3 Bulan Terakhir</option>
+                    </select>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pengaduan</th>
+                                <th>Judul Pengaduan</th>
+                                <th>Keterangan</th>
+                                <th>Status</th>
+                                <th class="aksi-header">
+                                    <div class="aksi-icons">
+                                        <span><i class="fas fa-eye"></i><br>Detail</span>
+                                        <span><i class="fas fa-pen"></i><br>Edit</span>
+                                        <span><i class="fas fa-trash"></i><br>Hapus</span>
+                                    </div>
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Menadturan Votfrzan</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-blue">Menunggu Verification</span></td>
+                                <td>
+                                    <button class="btn-action btn-blue">...</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Menugu Verification</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td>
+                                    <button class="btn-action btn-red">Ditolak</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Menopo Vejtrosen</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td>
+                                    <button class="btn-action btn-blue">Setuju</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Meag Omidgai</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td>
+                                    <button class="btn-action btn-red">Ditolak</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mege Verdsan</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td>
+                                    <button class="btn-action btn-blue">Setuju</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Reeg Snedanan</td>
+                                <td></td>
+                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td>
+                                    <button class="btn-action btn-red">Ditolak</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <span class="page-link">Sebelumnya</span>
+                    <span class="page-number active">1</span>
+                    <span class="page-number">2</span>
+                    <span class="page-number">3</span>
+                    <span class="page-link">Berikutnya</span>
+                    <button class="btn-page-open">Buka halaman</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

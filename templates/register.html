@@ -1,34 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Register SipMas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SipMas - Daftar Akun</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="login-container">
+        <div class="login-box register-box">
+                <!-- Logo Section -->
+                <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="{{ url_for('static', filename='image/logo.png/logo sipmas.png') }}" alt="logo sipmas">
+            </div>
+                <h1 class="app-title">SipMas</h1>
+                <p class="tagline">Cepat • Transparan • Akuntabel</p>
+            </div>
 
-<div class="card">
-    <h2>SipMas</h2>
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-   <form method="POST">
+            <!-- Register Form -->
+            <form method="POST" class="login-form register-form">
+                
+                <!-- Nama Lengkap -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" name="nama" placeholder="Masukkan Nama Lengkap" required>
+                    </div>
+                </div>
 
-    <input type="text" name="nama" placeholder="Nama Lengkap" required>
+                <!-- NIK -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input type="text" name="nik" placeholder="Masukkan NIK" required>
+                        <!-- Ikon Shield di kanan sesuai gambar -->
+                        <i class="fas fa-shield-alt input-icon-right"></i>
+                    </div>
+                </div>
 
-    <input type="text" name="nik" placeholder="NIK" required>
+                <!-- No. HP -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" name="hp" placeholder="No. HP" required>
+                    </div>
+                </div>
 
-    <input type="email" name="email" placeholder="Email" required>
+                <!-- Password -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password" id="password" placeholder="password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password', 'toggleIcon1')">
+                            <i class="fas fa-eye" id="toggleIcon1"></i>
+                        </button>
+                    </div>
+                </div>
 
-    <input type="text" name="no_hp" placeholder="No HP" required>
+                <!-- Konfirmasi Password -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Konfirmasi Password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirm_password', 'toggleIcon2')">
+                            <i class="fas fa-eye" id="toggleIcon2"></i>
+                        </button>
+                    </div>
+                </div>
 
-    <input type="password" name="password" placeholder="Password" required>
-    
-    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <!-- Syarat & Ketentuan -->
+                <div class="form-options checkbox-option">
+                    <label class="remember-me">
+                        <input type="checkbox" name="setuju" required>
+                        <span>Saya setuju dengan <a href="#" class="syarat-link">Syarat & Ketentuan</a></span>
+                    </label>
+                </div>
 
-    <button type="submit">Register</button>
+                <!-- Tombol Daftar -->
+                <button type="submit" class="btn-login">Daftar</button>
+            </form>
+        </div>
+    </div>
 
-</form>
-
-    <p>Sudah punya akun? <a href="/">Login</a></p>
-</div>
-
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>
