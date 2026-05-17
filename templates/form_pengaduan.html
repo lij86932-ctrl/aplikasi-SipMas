@@ -22,15 +22,15 @@
                 <a href="{{ url_for('dashboard') }}" class="nav-item">
                     <i class="fas fa-home"></i><span>Beranda</span>
                 </a>
-                <a href="#" class="nav-item active">
+                <a href="{{ url_for('form_pengaduan') }}" class="nav-item active">
                     <i class="fas fa-edit"></i><span>Form pengaduan</span>
                 </a>
                 <!-- Pastikan href="{{ url_for('pengaduan_saya') }}" -->
-<a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
-    <i class="fas fa-folder"></i>
-    <span>Pengaduan saya</span>
-</a>
-                <a href="#" class="nav-item">
+                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Pengaduan saya</span>
+                </a>
+                <a href="{{ url_for('riwayat') }}" class="nav-item">
                     <i class="fas fa-history"></i><span>Riwayat</span>
                 </a>
                 <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
@@ -46,60 +46,51 @@
             </div>
 
             <div class="form-container">
-                <!-- Judul -->
-                <div class="form-group">
-                    <label class="form-label">Judul</label>
-                    <input type="text" class="form-input" placeholder="Masukkan Judul Pengaduan">
-                </div>
-
-                <!-- Deskripsi -->
-                <div class="form-group">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea class="form-textarea" rows="4" placeholder="Jelaskan masalah secara detail"></textarea>
-                </div>
-
-                <!-- Lokasi -->
-                <div class="form-group">
-                    <label class="form-label">Lokasi</label>
-                    <input type="text" class="form-input" placeholder="5R6R+CQF, Kaloy, Kec. Tamiang Hulu, Kabupaten Aceh Tamiang, Aceh 24382">
-                </div>
-
-                <!-- Upload File -->
-                <div class="upload-area">
-                    <div class="upload-icon">
-                        <i class="fas fa-file-alt"></i>
+                <form action="{{ url_for('form_pengaduan') }}" method="POST" enctype="multipart/form-data">
+                    <!-- Judul -->
+                    <div class="form-group">
+                        <label class="form-label">Judul</label>
+                        <input type="text" name="title" class="form-input" placeholder="Masukkan Judul Pengaduan" required>
                     </div>
-                    <p class="upload-text">Seret & lepas file di sini atau klik untuk mengunggah</p>
-                    <p class="upload-subtext">PNG, JPG, PDF (max 5MB)</p>
-                    <input type="file" class="file-input" id="fileUpload">
-                </div>
 
-                <!-- Progress Bar -->
-                <!-- <div class="progress-section">
-                    <div class="progress-label">Langkah 1 dari 2</div>
-                    <div class="progress-track">
-                        <div class="progress-circle active">1</div>
-                        <div class="progress-line active"></div>
-                        <div class="progress-circle active">2</div>
-                        <div class="progress-line"></div>
-                        <div class="progress-circle">2</div>
+                    <!-- Deskripsi -->
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="deskripsi" class="form-textarea" rows="4" placeholder="Jelaskan masalah secara detail" required></textarea>
                     </div>
-                </div> -->
 
-                <!-- Toggle Anonim -->
-                <div class="toggle-section">
-                    <span class="toggle-label">Kirim sebagai anonim</span>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
+                    <!-- Lokasi -->
+                    <div class="form-group">
+                        <label class="form-label">Lokasi</label>
+                        <input type="text" name="lokasi" class="form-input" placeholder="5R6R+CQF, Kaloy, Kec. Tamiang Hulu, Kabupaten Aceh Tamiang, Aceh 24382">
+                    </div>
 
-                <!-- Buttons -->
-                <div class="button-group">
-                    <button class="btn btn-outline">Batal</button>
-                    <button class="btn btn-primary">Kirim pengaduan</button>
-                </div>
+                    <!-- Upload File -->
+                    <div class="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <p class="upload-text">Seret & lepas file di sini atau klik untuk mengunggah</p>
+                        <p class="upload-subtext">PNG, JPG, PDF (max 5MB)</p>
+                        <input type="file" name="file" class="file-input" id="fileUpload">
+                    </div>
+
+                    <!-- Toggle Anonim -->
+                    <div class="toggle-section">
+                        <span class="toggle-label">Kirim sebagai anonim</span>
+                        <label class="switch">
+                            <input type="checkbox" name="anonim" value="1">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="button-group">
+                        <button type="button" class="btn btn-outline" onclick="window.location='{{ url_for('dashboard') }}'">Batal</button>
+
+                        <button type="submit" class="btn btn-primary">Kirim pengaduan</button>
+                    </div>
+                </form>
             </div>
         </main>
     </div>

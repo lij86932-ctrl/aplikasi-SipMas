@@ -53,7 +53,7 @@
                     </div>
                     <select class="filter-select" id="statusFilter" onchange="filterTable()">
                         <option value="">Semua Status</option>
-                        <option value="Menunggu Verification">Menunggu Verification</option>
+                        <option value="pending">Menunggu Verification</option>
                         <option value="Sedang Diproses">Sedang Diproses</option>
                         <option value="Selesai">Selesai</option>
                         <option value="Ditolak">Ditolak</option>
@@ -73,7 +73,7 @@
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">Menunggu</span>
-                        <span class="stat-value">{{ pengaduan_list|selectattr('status', 'equalto', 'Menunggu Verification')|list|length }}</span>
+                        <span class="stat-value">{{ pengaduan_list|selectattr('status', 'equalto', 'pending')|list|length }}</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">Diproses</span>
@@ -116,11 +116,11 @@
                                 </td>
                                 <td>{{ item.lokasi[:30] }}...</td>
                                 <td>
-                                    <span class="badge {% if item.status == 'Menunggu Verification' %}badge-blue
+                                    <span class="badge {% if item.status == 'pending' %}badge-blue
                                                   {% elif item.status == 'Sedang Diproses' %}badge-warning
                                                   {% elif item.status == 'Selesai' %}badge-green
                                                   {% else %}badge-red{% endif %}">
-                                        {{ item.status }}
+                                        {% if item.status == 'pending' %}Menunggu Verification{% else %}{{ item.status }}{% endif %}
                                     </span>
                                 </td>
                                 <td>
@@ -132,13 +132,13 @@
                                 <td>{{ item.created_at.strftime('%d/%m/%Y') }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ url_for('detail_pengaduan', id=item.id) }}" class="btn-icon btn-info" title="Detail">
+                                        <a href="{{ url_for('detail_pengaduan', id=item.id_complaint) }}" class="btn-icon btn-info" title="Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ url_for('edit_pengaduan', id=item.id) }}" class="btn-icon btn-edit" title="Edit">
+                                        <a href="{{ url_for('edit_pengaduan', id=item.id_complaint) }}" class="btn-icon btn-edit" title="Edit">
                                             <i class="fas fa-pen"></i>
                                         </a>
-                                        <a href="{{ url_for('hapus_pengaduan', id=item.id) }}" 
+                                        <a href="{{ url_for('hapus_pengaduan', id=item.id_complaint) }}" 
                                            class="btn-icon btn-delete" 
                                            onclick="return confirm('Yakin ingin menghapus pengaduan ini?')"
                                            title="Hapus">

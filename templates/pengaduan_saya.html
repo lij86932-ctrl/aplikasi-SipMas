@@ -28,7 +28,7 @@
                 <a href="{{ url_for('pengaduan_saya') }}" class="nav-item active">
                     <i class="fas fa-folder"></i><span>Pengaduan saya</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ url_for('riwayat') }}" class="nav-item">
                     <i class="fas fa-history"></i><span>Riwayat</span>
                 </a>
                 <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
@@ -46,10 +46,10 @@
             <div class="card content-card">
                 <!-- Filter Bar -->
                 <div class="filter-bar">
-                    <div class="search-box">
-                        <input type="text" placeholder="Cari pengaduan...">
-                        <i class="fas fa-search search-icon"></i>
-                    </div>
+                    <form class="search-box" method="GET" action="{{ url_for('pengaduan_saya') }}">
+                        <input type="text" name="q" placeholder="Cari pengaduan..." value="{{ search_query|default('') }}">
+                        <button type="submit" class="search-button"><i class="fas fa-search search-icon"></i></button>
+                    </form>
                     <select class="filter-select">
                         <option>Keterangan</option>
                         <option>Sedang Diproses</option>
@@ -74,74 +74,35 @@
                         <thead>
                             <tr>
                                 <th>ID Pengaduan</th>
-                                <th>Judul Pengaduan</th>
-                                <th>Keterangan</th>
+                                <th>Judul</th>
+                                <th>Deskripsi</th>
                                 <th>Status</th>
-                                <th class="aksi-header">
-                                    <div class="aksi-icons">
-                                        <span><i class="fas fa-eye"></i><br>Detail</span>
-                                        <span><i class="fas fa-pen"></i><br>Edit</span>
-                                        <span><i class="fas fa-trash"></i><br>Hapus</span>
-                                    </div>
-                                    Aksi
-                                </th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in pengaduan_list %}
                             <tr>
-                                <td>Menadturan Votfrzan</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-blue">Menunggu Verification</span></td>
+                                <td>TRK-{{ item.id_complaint }}</td>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.deskripsi[:80] }}{% if item.deskripsi|length > 80 %}...{% endif %}</td>
                                 <td>
-                                    <button class="btn-action btn-blue">...</button>
+                                    <span class="badge {% if item.status == 'pending' %}badge-blue{% elif item.status == 'Sedang Diproses' %}badge-warning{% elif item.status == 'Selesai' %}badge-green{% else %}badge-red{% endif %}">
+                                        {% if item.status == 'pending' %}Menunggu Verifikasi{% else %}{{ item.status }}{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="btn-action btn-blue" href="{{ url_for('detail_pengaduan', id=item.id_complaint) }}">Detail</a>
+                                        <a class="btn-action btn-red" href="{{ url_for('hapus_pengaduan', id=item.id_complaint) }}" onclick="return confirm('Yakin ingin menghapus pengaduan ini?')">Hapus</a>
+                                    </div>
                                 </td>
                             </tr>
+                            {% else %}
                             <tr>
-                                <td>Menugu Verification</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-green">Selesai</span></td>
-                                <td>
-                                    <button class="btn-action btn-red">Ditolak</button>
-                                </td>
+                                <td colspan="6" style="text-align: center; padding: 30px;">Belum ada pengaduan.</td>
                             </tr>
-                            <tr>
-                                <td>Menopo Vejtrosen</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-green">Selesai</span></td>
-                                <td>
-                                    <button class="btn-action btn-blue">Setuju</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Meag Omidgai</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-green">Selesai</span></td>
-                                <td>
-                                    <button class="btn-action btn-red">Ditolak</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Mege Verdsan</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-green">Selesai</span></td>
-                                <td>
-                                    <button class="btn-action btn-blue">Setuju</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Reeg Snedanan</td>
-                                <td></td>
-                                <td><span class="badge badge-warning">Sedang Diproses</span></td>
-                                <td><span class="badge badge-green">Selesai</span></td>
-                                <td>
-                                    <button class="btn-action btn-red">Ditolak</button>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

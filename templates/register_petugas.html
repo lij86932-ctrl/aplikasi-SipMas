@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SipMas - Daftar Akun</title>
+    <title>SipMas - Daftar Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,13 +11,13 @@
 <body>
     <div class="login-container">
         <div class="login-box register-box">
-                <!-- Logo Section -->
-                <div class="logo-section">
+            <!-- Logo Section -->
+            <div class="logo-section">
                 <div class="logo-icon">
                     <img src="{{ url_for('static', filename='image/logo.png/logo sipmas.png') }}" alt="logo sipmas">
-            </div>
-                <h1 class="app-title">SipMas</h1>
-                <p class="tagline">Cepat • Transparan • Akuntabel</p>
+                </div>
+                <h1 class="app-title">SipMas Admin</h1>
+                <p class="tagline">Panel Registrasi Internal Administrator</p>
             </div>
 
             <!-- Flash Messages -->
@@ -32,29 +32,11 @@
             <!-- Register Form -->
             <form method="POST" class="login-form register-form">
                 
-                <!-- Nama Lengkap -->
+                <!-- Nama Lengkap / Username Admin -->
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" name="nama" placeholder="Masukkan Nama Lengkap" required>
-                    </div>
-                </div>
-
-                <!-- NIK -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <i class="fas fa-id-card input-icon"></i>
-                        <input type="text" name="nik" placeholder="Masukkan NIK" required>
-                        <!-- Ikon Shield di kanan sesuai gambar -->
-                        <i class="fas fa-shield-alt input-icon-right"></i>
-                    </div>
-                </div>
-
-                <!-- No. HP -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <i class="fas fa-phone input-icon"></i>
-                        <input type="tel" name="hp" placeholder="No. HP" required>
+                        <i class="fas fa-user-shield input-icon"></i>
+                        <input type="text" name="nama" placeholder="Masukkan Nama Admin" required>
                     </div>
                 </div>
 
@@ -62,23 +44,15 @@
                 <div class="form-group">
                     <div class="input-wrapper">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="password" id="password" placeholder="password" required>
+                        <input type="password" name="password" id="password" placeholder="Password Admin" required>
                         <button type="button" class="toggle-password" onclick="togglePassword('password', 'toggleIcon1')">
                             <i class="fas fa-eye" id="toggleIcon1"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Syarat & Ketentuan -->
-                <div class="form-options checkbox-option">
-                    <label class="remember-me">
-                        <input type="checkbox" name="setuju" required>
-                        <span>Saya setuju dengan <a href="#" class="syarat-link">Syarat & Ketentuan</a></span>
-                    </label>
-                </div>
-
-                <!-- Tombol Daftar -->
-                <button type="submit" class="btn-login">Daftar</button>
+                <!-- Tombol Daftar Admin -->
+                <button type="submit" class="btn-login" style="margin-top: 20px;">Daftar Admin</button>
             </form>
         </div>
     </div>

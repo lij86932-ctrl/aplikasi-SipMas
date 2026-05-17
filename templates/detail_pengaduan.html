@@ -21,7 +21,7 @@
                 <a href="{{ url_for('dashboard') }}" class="nav-item">
                     <i class="fas fa-home"></i><span>Beranda</span>
                 </a>
-                <a href="{{ url_for('pengaduan_list') }}" class="nav-item active">
+                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item active">
                     <i class="fas fa-list"></i><span>Daftar Pengaduan</span>
                 </a>
                 <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
@@ -34,7 +34,7 @@
             <div class="card content-card" style="max-width: 800px; margin: 0 auto;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                     <h2>Detail Pengaduan #{{ pengaduan.id }}</h2>
-                    <a href="{{ url_for('pengaduan_list') }}" class="btn-outline">
+                    <a href="{{ url_for('pengaduan_saya') }}" class="btn-outline">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -57,8 +57,8 @@
                     
                     <div class="detail-row">
                         <label>Status:</label>
-                        <span class="badge badge-{{ 'blue' if pengaduan.status == 'Menunggu Verification' else 'warning' if pengaduan.status == 'Sedang Diproses' else 'green' }}">
-                            {{ pengaduan.status }}
+                        <span class="badge badge-{{ 'blue' if pengaduan.status == 'pending' else 'warning' if pengaduan.status == 'Sedang Diproses' else 'green' }}">
+                            {% if pengaduan.status == 'pending' %}Menunggu Verification{% else %}{{ pengaduan.status }}{% endif %}
                         </span>
                     </div>
                     
