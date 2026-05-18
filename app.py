@@ -107,9 +107,9 @@ def register():
         
         try:
             # Kolom di database Anda bernama 'password'
-            cursor.execute('''s
-                INSERT INTO users (nama, password, nik, no_hp) 
-                VALUES (%s, %s, %s, %s)
+            cursor.execute('''
+            INSERT INTO users (nama, password, nik, no_hp) 
+            VALUES (%s, %s, %s, %s)
             ''', (nama, hashed_password, nik, hp))
             db.commit() 
             flash('Pendaftaran berhasil! Silakan login.', 'success')
