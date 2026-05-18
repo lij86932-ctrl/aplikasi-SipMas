@@ -257,6 +257,206 @@ def dashboard_petugas():
     except Exception as e:
         return f"<h2>Dashboard Petugas Error</h2><p>{str(e)}</p>"
 
+
+# --- ROUTE LIST PENGADUAN UNTUK PETUGAS (VERIFICATION) ---
+@app.route('/verification-laporan')
+@login_required
+def verification_laporan_list():
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        # Ambil pengaduan berstatus 'pending' untuk diverifikasi
+        cursor.execute('''
+            SELECT c.id_complaint AS id, c.title, c.status, c.created_at, u.nama AS pelapor
+            FROM complaint c
+            LEFT JOIN users u ON c.id_user = u.id_user
+            WHERE c.status = %s
+            ORDER BY c.created_at DESC
+        ''', ('pending',))
+        laporan_list = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return render_template('verification_list.html', laporan_list=laporan_list)
+    except Exception as e:
+        return f"<h2>Error</h2><p>{e}</p>"
+
+
+@app.route('/verification-laporan/<int:id>', methods=['GET', 'POST'])
+@login_required
+def verification_laporan(id):
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    try:
+        if request.method == 'POST':
+            status_baru = request.form.get('status_baru')
+            catatan = request.form.get('catatan_progress')
+            cursor.execute('UPDATE complaint SET status = %s, updated_at = NOW() WHERE id_complaint = %s', (status_baru, id))
+            try:
+                cursor.execute('UPDATE complaint SET catatan_petugas = %s WHERE id_complaint = %s', (catatan, id))
+            except Exception:
+                pass
+            db.commit()
+            flash('Status laporan diperbarui.', 'success')
+            return redirect(url_for('verification_laporan', id=id))
+
+        # GET: ambil data laporan
+        cursor.execute('''
+            SELECT c.id_complaint AS id, c.title AS judul, c.deskripsi, c.lokasi, c.status, c.created_at, c.catatan_petugas,
+                   u.nama AS pelapor, u.no_hp, c.attachment
+            FROM complaint c
+            LEFT JOIN users u ON c.id_user = u.id_user
+            WHERE c.id_complaint = %s
+        ''', (id,))
+        laporan = cursor.fetchone()
+        cursor.close()
+        db.close()
+        if not laporan:
+            flash('Laporan tidak ditemukan.', 'error')
+            return redirect(url_for('verification_laporan_list'))
+        return render_template('verification_laporan.html', laporan=laporan)
+    except Exception as e:
+        print('Error verification_laporan:', e)
+        return f"Terjadi kesalahan: {e}", 500
+
+
+@app.route('/daftar-pengaduan-petugas')
+@login_required
+def daftar_pengaduan_petugas():
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT id_complaint AS id, title AS judul, status, created_at FROM complaint ORDER BY created_at DESC')
+        data = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return render_template('daftar_pengaduan_petugas.html', pengaduan_list=data)
+    except Exception as e:
+        return f"<h2>Error</h2><p>{e}</p>"
+
+
+@app.route('/detail-pengaduan-petugas/<int:id>', methods=['GET', 'POST'])
+@login_required
+def detail_pengaduan_petugas(id):
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute('''
+            SELECT c.id_complaint AS id, c.title AS judul, c.deskripsi, c.lokasi, c.status, c.created_at, c.updated_at,
+                   c.catatan_petugas, c.prioritas, c.attachment, u.nama AS nama_lengkap, u.no_hp
+            FROM complaint c
+            LEFT JOIN users u ON c.id_user = u.id_user
+            WHERE c.id_complaint = %s
+        ''', (id,))
+        pengaduan = cursor.fetchone()
+        cursor.close()
+        db.close()
+        if not pengaduan:
+            flash('Pengaduan tidak ditemukan.', 'error')
+            return redirect(url_for('daftar_pengaduan_petugas'))
+        return render_template('detail_pengaduan_petugas.html', pengaduan=pengaduan)
+    except Exception as e:
+        print('Error detail_pengaduan_petugas:', e)
+        return f"Terjadi kesalahan: {e}", 500
+
+
+@app.route('/update-status-pengaduan/<int:id>', methods=['POST'])
+@login_required
+def update_status_pengaduan(id):
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+
+    status = request.form.get('status') or request.form.get('status_baru')
+    prioritas = request.form.get('prioritas') or request.form.get('priority')
+    assigned_to = request.form.get('assigned_to')
+    catatan = request.form.get('catatan_petugas') or request.form.get('catatan_progress')
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+        # Build update parts dynamically
+        updates = []
+        params = []
+        if status:
+            updates.append('status = %s')
+            params.append(status)
+        if prioritas:
+            updates.append('prioritas = %s')
+            params.append(prioritas)
+        if assigned_to:
+            updates.append('assigned_to = %s')
+            params.append(assigned_to)
+        if catatan is not None:
+            updates.append('catatan_petugas = %s')
+            params.append(catatan)
+        if updates:
+            updates.append('updated_at = NOW()')
+            sql = 'UPDATE complaint SET ' + ', '.join(updates) + ' WHERE id_complaint = %s'
+            params.append(id)
+            cursor.execute(sql, tuple(params))
+            db.commit()
+        cursor.close()
+        db.close()
+        flash('Perubahan status berhasil disimpan.', 'success')
+    except Exception as e:
+        print('Error update_status_pengaduan:', e)
+        flash(f'Gagal menyimpan perubahan: {e}', 'error')
+
+    return redirect(url_for('detail_pengaduan_petugas', id=id))
+
+
+@app.route('/upload-bukti-penyelesaian/<int:id>', methods=['POST'])
+@login_required
+def upload_bukti_penyelesaian(id):
+    if session.get('role') != 'petugas':
+        flash('Akses ditolak. Hanya untuk petugas.', 'error')
+        return redirect(url_for('dashboard'))
+
+    uploaded_file = request.files.get('bukti_file')
+    if not uploaded_file or uploaded_file.filename == '':
+        flash('Tidak ada file yang diunggah.', 'error')
+        return redirect(url_for('detail_pengaduan_petugas', id=id))
+
+    # ensure bukti folder exists
+    bukti_folder = os.path.join(app.root_path, 'static', 'uploads', 'bukti')
+    os.makedirs(bukti_folder, exist_ok=True)
+
+    try:
+        filename = secure_filename(uploaded_file.filename)
+        name, ext = os.path.splitext(filename)
+        new_filename = f"bukti_{id}_{int(time.time())}{ext}"
+        file_path = os.path.join(bukti_folder, new_filename)
+        uploaded_file.save(file_path)
+
+        # store filename in DB
+        db = get_db_connection()
+        cursor = db.cursor()
+        cursor.execute('UPDATE complaint SET bukti_penyelesaian = %s, status = %s, updated_at = NOW() WHERE id_complaint = %s', (new_filename, 'Selesai', id))
+        db.commit()
+        cursor.close()
+        db.close()
+        flash('Bukti berhasil diunggah dan status diubah menjadi Selesai.', 'success')
+    except Exception as e:
+        print('Error upload_bukti_penyelesaian:', e)
+        flash(f'Gagal mengunggah bukti: {e}', 'error')
+
+    return redirect(url_for('detail_pengaduan_petugas', id=id))
+
 # --- ROUTE PENGADUAN SAYA ---
 @app.route('/pengaduan-saya')
 @login_required
@@ -388,10 +588,6 @@ def form_pengaduan():
     return render_template('form_pengaduan.html')
 
 # --- ROUTE TAMBAHAN (Fix Error Sebelumnya) ---
-@app.route('/forgot-password')
-def forgot_password():
-    return "Fitur Lupa Password sedang dalam pengembangan"
-
 @app.route('/logout')
 def logout():
     session.clear()

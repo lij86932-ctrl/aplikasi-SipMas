@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Laporan Masuk</title>
+    <style>
+        /* CSS Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: #dceefb; /* Warna background biru muda */
+            padding: 40px;
+            color: #333;
+        }
+
+        /* Header Title */
+        h1.page-title {
+            text-align: center;
+            color: #1e3a5f;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        /* Main Card Container */
+        .card {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Info Header Section */
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .info-details p {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .info-details strong {
+            color: #555;
+        }
+
+        .badge-status {
+            background-color: #fbbf24;
+            color: #78350f;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Evidence Grid (Images + Map) */
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: stretch;
+        }
+
+        .evidence-images {
+            display: flex;
+            gap: 15px;
+        }
+
+        .evidence-images img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .map-placeholder {
+            background-color: #e0f2fe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Simulasi peta sederhana dengan CSS */
+        .map-pin {
+            font-size: 40px;
+            color: #ef4444;
+            z-index: 10;
+        }
+
+        .map-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, #fff 20px, #fff 21px);
+        }
+
+        /* Form Section */
+        .form-section {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        /* Status Select Box */
+        .status-box {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        select {
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 10px;
+            position: relative;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+        }
+
+        .progress-fill {
+            width: 50%;
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .progress-handle {
+            width: 16px;
+            height: 16px;
+            background: #2563eb;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            right: -8px;
+            transform: translateY(-50%);
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .progress-text {
+            position: absolute;
+            right: 0;
+            top: -25px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Text Input & Textarea */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        
+        textarea { resize: none; }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .upload-icon { color: #3b82f6; font-size: 1.2rem; }
+        .upload-text { color: #64748b; font-size: 0.9rem; }
+
+        /* Bottom Row (Upload + Toggle) */
+        .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 20px;
+            gap: 30px;
+        }
+
+        .upload-container { flex: 1; }
+        .upload-container label { margin-bottom: 10px; display: block; font-weight: 500; }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        /* Toggle Switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #3b82f6; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Buttons */
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background-color: #3b82f6; color: white; box-shadow: 0 4px 6px rgba(59,130,246,0.3); }
+        .btn-primary:hover { background-color: #2563eb; }
+        
+        .btn-secondary { background-color: #e5e7eb; color: #4b5563; }
+        .btn-secondary:hover { background-color: #d1d5db; }
+
+        /* Alert Flash Messages */
+        .alert {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    </style>
+</head>
+<body>
+
+    <h1 class="page-title">Verification Laporan Masuk</h1>
+
+    <div class="card">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <!-- Header Info -->
+            <div class="info-header">
+                <div class="info-details">
+                    <p><strong>Pelapor:</strong> {{ laporan.pelapor }}</p>
+                    <p><strong>Nomor Pelacakan:</strong> SIP-2024-08765</p>
+                    <p><strong>Tanggal Pengajuan:</strong> {{ laporan.created_at.strftime('%d %B %Y') }}</p>
+                </div>
+                <div class="badge-status">
+                    {{ laporan.status }}
+                </div>
+            </div>
+
+            <!-- Evidence & Map -->
+            <div class="evidence-grid">
+                <div class="evidence-images">
+                    <!-- Placeholder images -->
+                    <img src="https://via.placeholder.com/150?text=Bukti+1" alt="Bukti 1">
+                    <img src="https://via.placeholder.com/150?text=Bukti+2" alt="Bukti 2">
+                    <img src="https://via.placeholder.com/150?text=Bukti+3" alt="Bukti 3">
+                </div>
+                <div class="map-placeholder">
+                    <div class="map-lines"></div>
+                    <div class="map-pin"></div>
+                </div>
+            </div>
+
+            <!-- Form Update -->
+            <div class="form-section">
+                <div class="section-title">Update Penanganan</div>
+
+                <!-- Status Selector -->
+                <div class="form-group">
+                    <label>Status Baru</label>
+                    <div class="status-box">
+                        <select name="status_baru">
+                            <option value="Diproses" {% if laporan.status == 'Diproses' %}selected{% endif %}>Diproses</option>
+                            <option value="Selesai" {% if laporan.status == 'Selesai' %}selected{% endif %}>Selesai</option>
+                            <option value="Ditolak" {% if laporan.status == 'Ditolak' %}selected{% endif %}>Ditolak</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Progress Slider (Visual Only) -->
+                <div class="form-group">
+                    <div class="progress-container">
+                        <span class="progress-text">0%</span>
+                        <div class="progress-fill" style="width: 50%;">
+                            <div class="progress-handle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catatan Progress -->
+                <div class="form-group">
+                    <label>Catatan Progress</label>
+                    <textarea name="catatan_progress" rows="2" placeholder="Tulis catatan di sini...">{{ laporan.catatan_petugas or '' }}</textarea>
+                </div>
+
+                <!-- Upload & Toggle -->
+                <div class="bottom-row">
+                    <div class="upload-container">
+                        <label>Bukti Penyelesaian</label>
+                        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                            <span class="upload-icon">☁️</span>
+                            <span class="upload-text">Seret & lepas file di sini atau klik untuk diunggah</span>
+                            <input type="file" id="fileInput" name="bukti_file" style="display:none">
+                        </div>
+                    </div>
+                    
+                    <div class="toggle-container">
+                        <span>Kirim notifikasi email</span>
+                        <label class="switch">
+                            <input type="checkbox" name="kirim_notifikasi" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan Update</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Script sederhana untuk menampilkan nama file saat dipilih
+        document.getElementById('fileInput').addEventListener('change', function() {
+            if(this.files && this.files.length > 0) {
+                document.querySelector('.upload-text').textContent = 'File terpilih: ' + this.files[0].name;
+            }
+        });
+    </script>
+</body>
+</html>
