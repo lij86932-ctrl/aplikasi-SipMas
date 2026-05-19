@@ -310,7 +310,7 @@ def verification_laporan(id):
         # GET: ambil data laporan
         cursor.execute('''
             SELECT c.id_complaint AS id, c.title AS judul, c.deskripsi, c.lokasi, c.status, c.created_at, c.catatan_petugas,
-                   u.nama AS pelapor, u.no_hp, c.attachment
+                   u.nama AS pelapor, u.no_hp, c.attachment, c.bukti_penyelesaian
             FROM complaint c
             LEFT JOIN users u ON c.id_user = u.id_user
             WHERE c.id_complaint = %s
@@ -318,6 +318,11 @@ def verification_laporan(id):
         laporan = cursor.fetchone()
         cursor.close()
         db.close()
+        if laporan:
+            if laporan.get('attachment'):
+                laporan['attachment'] = laporan['attachment'].replace('\\', '/')
+            if laporan.get('bukti_penyelesaian'):
+                laporan['bukti_penyelesaian'] = laporan['bukti_penyelesaian'].replace('\\', '/')
         if not laporan:
             flash('Laporan tidak ditemukan.', 'error')
             return redirect(url_for('verification_laporan_list'))
@@ -563,7 +568,7 @@ def form_pengaduan():
                 new_filename = f"{inserted_id}_{int(time.time())}{ext}"
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                 uploaded_file.save(file_path)
-                saved_filename = os.path.join('image', 'uploads', new_filename)
+                saved_filename = f"image/uploads/{new_filename}"
 
                 # update attachment path in DB
                 try:

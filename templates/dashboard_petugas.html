@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dashboard Petugas - SipMas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <svg width="50" height="50" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M40 5L15 17.5V35C15 52.5 25.5 67.5 40 72.5C54.5 67.5 65 52.5 65 35V17.5L40 5Z" stroke="#1e3a8a" stroke-width="3" fill="none"/>
+                        <rect x="25" y="25" width="30" height="22" rx="3" fill="#1e3a8a"/>
+                        <path d="M32 36L37 41L48 30" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="32" cy="58" r="4" fill="#1e3a8a"/>
+                        <circle cx="40" cy="56" r="5" fill="#1e3a8a"/>
+                        <circle cx="48" cy="58" r="4" fill="#1e3a8a"/>
+                    </svg>
+                </div>
+                <h3>SipMas</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard_petugas') }}" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Beranda</span>
+                </a>
+                <a href="{{ url_for('verification_laporan_list') }}" class="nav-item">
+                    <i class="fas fa-list"></i>
+                    <span>Verifikasi</span>
+                </a>
+                <a href="{{ url_for('daftar_pengaduan_petugas') }}" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Daftar Pengaduan</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Dashboard Petugas</h1>
+                <p>Selamat datang, {{ stats.user_nama or 'Petugas' }}.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-card-primary">
+                    <div class="stat-card-icon"><i class="fas fa-list"></i></div>
+                    <div>
+                        <p>Total Pengaduan</p>
+                        <h2>{{ stats.total_complaint or 0 }}</h2>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-warning">
+                    <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <p>Pending</p>
+                        <h2>{{ stats.pending or 0 }}</h2>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-info">
+                    <div class="stat-card-icon"><i class="fas fa-spinner"></i></div>
+                    <div>
+                        <p>Sedang Diproses</p>
+                        <h2>{{ stats.in_progress or 0 }}</h2>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-success">
+                    <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+                    <div>
+                        <p>Selesai</p>
+                        <h2>{{ stats.selesai or 0 }}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-actions">
+                <a href="{{ url_for('verification_laporan_list') }}" class="btn btn-secondary"><i class="fas fa-clipboard-check"></i> Lihat Verifikasi</a>
+                <a href="{{ url_for('daftar_pengaduan_petugas') }}" class="btn btn-primary"><i class="fas fa-folder-open"></i> Semua Pengaduan</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
