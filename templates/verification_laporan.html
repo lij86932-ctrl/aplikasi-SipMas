@@ -324,7 +324,7 @@
                 <div class="info-details">
                     <p><strong>Pelapor:</strong> {{ laporan.pelapor }}</p>
                     <p><strong>Nomor Pelacakan:</strong> SIP-2024-08765</p>
-                    <p><strong>Tanggal Pengajuan:</strong> {{ laporan.created_at.strftime('%d %B %Y') }}</p>
+                    <p><strong>Tanggal Pengajuan:</strong> {{ laporan.created_at.strftime('%d %b %Y') if laporan.created_at else '-' }}</p>
                 </div>
                 <div class="badge-status">
                     {{ laporan.status }}
@@ -334,14 +334,18 @@
             <!-- Evidence & Map -->
             <div class="evidence-grid">
                 <div class="evidence-images">
-                    <!-- Placeholder images -->
-                    <img src="https://via.placeholder.com/150?text=Bukti+1" alt="Bukti 1">
-                    <img src="https://via.placeholder.com/150?text=Bukti+2" alt="Bukti 2">
-                    <img src="https://via.placeholder.com/150?text=Bukti+3" alt="Bukti 3">
-                </div>
+
+        {% if laporan.attachment %}
+             <img src="{{ url_for('static', filename=laporan.attachment) }}"
+             alt="Bukti Pengaduan">
+        {% else %}
+             <p>Tidak ada gambar bukti</p>
+        {% endif %}
+
+            </div>
                 <div class="map-placeholder">
                     <div class="map-lines"></div>
-                    <div class="map-pin"></div>
+                    <div class="map-pin">📍</div>
                 </div>
             </div>
 
@@ -354,10 +358,28 @@
                     <label>Status Baru</label>
                     <div class="status-box">
                         <select name="status_baru">
-                            <option value="Diproses" {% if laporan.status == 'Diproses' %}selected{% endif %}>Diproses</option>
-                            <option value="Selesai" {% if laporan.status == 'Selesai' %}selected{% endif %}>Selesai</option>
-                            <option value="Ditolak" {% if laporan.status == 'Ditolak' %}selected{% endif %}>Ditolak</option>
-                        </select>
+
+    <option value="pending"
+        {% if laporan.status == 'pending' %}selected{% endif %}>
+        Pending
+    </option>
+
+    <option value="Sedang Diproses"
+        {% if laporan.status == 'Sedang Diproses' %}selected{% endif %}>
+        Sedang Diproses
+    </option>
+
+    <option value="Selesai"
+        {% if laporan.status == 'Selesai' %}selected{% endif %}>
+        Selesai
+    </option>
+
+    <option value="Ditolak"
+        {% if laporan.status == 'Ditolak' %}selected{% endif %}>
+        Ditolak
+    </option>
+
+</select>
                     </div>
                 </div>
 
