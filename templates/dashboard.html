@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Masyarakat - SipMas</title>
+    <title>{% block title %}Dashboard Masyarakat - SipMas{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body class="dashboard-body">
     <div class="dashboard-container">
@@ -28,19 +30,19 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                <a href="{{ url_for('dashboard') }}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
                     <i class="fas fa-home"></i>
                     <span>Beranda</span>
                 </a>
-                <a href="{{ url_for('form_pengaduan') }}" class="nav-item">
+                <a href="{{ url_for('form_pengaduan') }}" class="nav-item {% if active_page == 'form_pengaduan' %}active{% endif %}">
                     <i class="fas fa-edit"></i>
                     <span>Form pengaduan</span>
                 </a>
-                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
+                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item {% if active_page == 'pengaduan_saya' %}active{% endif %}">
                     <i class="fas fa-folder"></i>
                     <span>Pengaduan saya</span>
                 </a>
-                <a href="{{ url_for('riwayat') }}" class="nav-item">
+                <a href="{{ url_for('riwayat') }}" class="nav-item {% if active_page == 'riwayat' %}active{% endif %}">
                     <i class="fas fa-history"></i>
                     <span>Riwayat</span>
                 </a>
@@ -53,74 +55,18 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            {% block content_header %}
             <div class="content-header">
-                <h1>Dashboard Masyarakat</h1>
+                <h1>{% block page_title %}Dashboard Masyarakat{% endblock %}</h1>
             </div>
+            {% endblock %}
 
-            <div class="welcome-section">
-                <h2>Selamat datang, {{ user_nama }}!</h2>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="stats-container">
-                <div class="stat-card stat-blue">
-                    <div class="stat-header">
-                        <span>Total Pengaduan</span>
-                        <div class="stat-dot"></div>
-                    </div>
-                    <div class="stat-number">{{ stats.total_pengaduan }}</div>
-                </div>
-
-                <div class="stat-card stat-teal">
-                    <div class="stat-header">
-                        <span>Dalam Proses</span>
-                        <div class="stat-dot"></div>
-                    </div>
-                    <div class="stat-number">{{ stats.dalam_proses }}</div>
-                </div>
-
-                <div class="stat-card stat-green">
-                    <div class="stat-header">
-                        <span>Selesai</span>
-                        <div class="stat-dot"></div>
-                    </div>
-                    <div class="stat-number">{{ stats.selesai }}</div>
-                </div>
-            </div>
-
-            <!-- Table Section -->
-            <div class="table-section">
-                <h3>Daftar Pengaduan Terbaru</h3>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID Pengaduan</th>
-                                <th>Judul Pengaduan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for pengaduan in pengaduan_list %}
-                            <tr>
-                                <td>{{ pengaduan.id }}</td>
-                                <td>{{ pengaduan.judul }}</td>
-                                <td>
-                                    <span class="status-badge {% if 'Menunggu' in pengaduan.status %}status-waiting{% elif 'Diproses' in pengaduan.status %}status-process{% else %}status-done{% endif %}">
-                                        {{ pengaduan.status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn-selesai">Selesai</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% block content %}
+            <!-- Konten halaman akan ditimpa di child template -->
+            {% endblock %}
         </main>
     </div>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

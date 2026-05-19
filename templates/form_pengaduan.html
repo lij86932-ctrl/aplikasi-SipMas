@@ -1,98 +1,67 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pengaduan - SipMas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar (Sama seperti Dashboard) -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-container">
-                    <i class="fas fa-shield-alt logo-icon"></i>
-                    <h3>SipMas</h3>
-                </div>
+{% extends "dashboard.html" %}
+
+{% block title %}Form Pengaduan - SipMas{% endblock %}
+{% block active_page %}form_pengaduan{% endblock %}
+
+{% block page_title %}Form Pengaduan{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form action="{{ url_for('form_pengaduan') }}" method="POST" enctype="multipart/form-data" id="pengaduanForm">
+        <div class="form-group">
+            <label class="form-label">Judul Pengaduan</label>
+            <input type="text" name="title" class="form-input" placeholder="Contoh: Jalan Rusak di Desa Kaloy" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Deskripsi</label>
+            <textarea name="deskripsi" class="form-textarea" rows="5" placeholder="Jelaskan masalah secara lengkap..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Lokasi</label>
+            <input type="text" name="lokasi" class="form-input" placeholder="Desa/Kecamatan/Kabupaten" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Upload Bukti (Opsional)</label>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <p class="upload-text">Seret file atau klik untuk mengunggah</p>
+                <p class="upload-subtext">PNG, JPG, PDF • Maks. 5MB</p>
+                <input type="file" name="file" class="file-input" id="fileUpload" accept="image/*,.pdf">
             </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item">
-                    <i class="fas fa-home"></i><span>Beranda</span>
-                </a>
-                <a href="{{ url_for('form_pengaduan') }}" class="nav-item active">
-                    <i class="fas fa-edit"></i><span>Form pengaduan</span>
-                </a>
-                <!-- Pastikan href="{{ url_for('pengaduan_saya') }}" -->
-                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
-                    <i class="fas fa-folder"></i>
-                    <span>Pengaduan saya</span>
-                </a>
-                <a href="{{ url_for('riwayat') }}" class="nav-item">
-                    <i class="fas fa-history"></i><span>Riwayat</span>
-                </a>
-                <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
-                    <i class="fas fa-sign-out-alt"></i><span>Keluar</span>
-                </a>
-            </nav>
-        </aside>
+            <div id="filePreview" class="file-preview"></div>
+        </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="form-header">
-                <h1>Form Pengaduan</h1>
-            </div>
+        <div class="toggle-section">
+            <span class="toggle-label">Kirim sebagai Anonim</span>
+            <label class="switch">
+                <input type="checkbox" name="anonim" value="1">
+                <span class="slider round"></span>
+            </label>
+        </div>
 
-            <div class="form-container">
-                <form action="{{ url_for('form_pengaduan') }}" method="POST" enctype="multipart/form-data">
-                    <!-- Judul -->
-                    <div class="form-group">
-                        <label class="form-label">Judul</label>
-                        <input type="text" name="title" class="form-input" placeholder="Masukkan Judul Pengaduan" required>
-                    </div>
+        <div class="button-group">
+            <button type="button" class="btn btn-outline" onclick="window.location='{{ url_for('dashboard') }}'">Batal</button>
+            <button type="submit" class="btn btn-primary">Kirim Pengaduan</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
 
-                    <!-- Deskripsi -->
-                    <div class="form-group">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-textarea" rows="4" placeholder="Jelaskan masalah secara detail" required></textarea>
-                    </div>
-
-                    <!-- Lokasi -->
-                    <div class="form-group">
-                        <label class="form-label">Lokasi</label>
-                        <input type="text" name="lokasi" class="form-input" placeholder="5R6R+CQF, Kaloy, Kec. Tamiang Hulu, Kabupaten Aceh Tamiang, Aceh 24382">
-                    </div>
-
-                    <!-- Upload File -->
-                    <div class="upload-area">
-                        <div class="upload-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <p class="upload-text">Seret & lepas file di sini atau klik untuk mengunggah</p>
-                        <p class="upload-subtext">PNG, JPG, PDF (max 5MB)</p>
-                        <input type="file" name="file" class="file-input" id="fileUpload">
-                    </div>
-
-                    <!-- Toggle Anonim -->
-                    <div class="toggle-section">
-                        <span class="toggle-label">Kirim sebagai anonim</span>
-                        <label class="switch">
-                            <input type="checkbox" name="anonim" value="1">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="button-group">
-                        <button type="button" class="btn btn-outline" onclick="window.location='{{ url_for('dashboard') }}'">Batal</button>
-
-                        <button type="submit" class="btn btn-primary">Kirim pengaduan</button>
-                    </div>
-                </form>
-            </div>
-        </main>
-    </div>
-</body>
-</html>
+{% block extra_js %}
+<script>
+    document.getElementById('fileUpload').addEventListener('change', function(e) {
+        const preview = document.getElementById('filePreview');
+        preview.innerHTML = '';
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `<i class="fas fa-file"></i> <span>${file.name}</span><small>${(file.size/1024/1024).toFixed(2)} MB</small>`;
+            preview.appendChild(div);
+        }
+    });
+</script>
+{% endblock %}

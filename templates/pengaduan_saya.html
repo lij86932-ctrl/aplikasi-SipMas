@@ -1,123 +1,71 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaduan Saya - SipMas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-container">
-                    <i class="fas fa-shield-alt logo-icon"></i>
-                    <h3>SipMas</h3>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item">
-                    <i class="fas fa-home"></i><span>Beranda</span>
-                </a>
-                <a href="{{ url_for('form_pengaduan') }}" class="nav-item">
-                    <i class="fas fa-edit"></i><span>Form pengaduan</span>
-                </a>
-                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item active">
-                    <i class="fas fa-folder"></i><span>Pengaduan saya</span>
-                </a>
-                <a href="{{ url_for('riwayat') }}" class="nav-item">
-                    <i class="fas fa-history"></i><span>Riwayat</span>
-                </a>
-                <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
-                    <i class="fas fa-sign-out-alt"></i><span>Keluar</span>
-                </a>
-            </nav>
-        </aside>
+{% extends "dashboard.html" %}
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="page-header">
-                <h1>Pengaduan Saya</h1>
-            </div>
+{% block title %}Pengaduan Saya - SipMas{% endblock %}
+{% block active_page %}pengaduan_saya{% endblock %}
+{% block page_title %}Pengaduan Saya{% endblock %}
 
-            <div class="card content-card">
-                <!-- Filter Bar -->
-                <div class="filter-bar">
-                    <form class="search-box" method="GET" action="{{ url_for('pengaduan_saya') }}">
-                        <input type="text" name="q" placeholder="Cari pengaduan..." value="{{ search_query|default('') }}">
-                        <button type="submit" class="search-button"><i class="fas fa-search search-icon"></i></button>
-                    </form>
-                    <select class="filter-select">
-                        <option>Keterangan</option>
-                        <option>Sedang Diproses</option>
-                        <option>Selesai</option>
-                    </select>
-                    <select class="filter-select">
-                        <option>Status</option>
-                        <option>Menunggu Verification</option>
-                        <option>Selesai</option>
-                    </select>
-                    <select class="filter-select">
-                        <option>Rentang Tanggal</option>
-                        <option>7 Hari Terakhir</option>
-                        <option>30 Hari Terakhir</option>
-                        <option>3 Bulan Terakhir</option>
-                    </select>
-                </div>
-
-                <!-- Table -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID Pengaduan</th>
-                                <th>Judul</th>
-                                <th>Deskripsi</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in pengaduan_list %}
-                            <tr>
-                                <td>TRK-{{ item.id_complaint }}</td>
-                                <td>{{ item.title }}</td>
-                                <td>{{ item.deskripsi[:80] }}{% if item.deskripsi|length > 80 %}...{% endif %}</td>
-                                <td>
-                                    <span class="badge {% if item.status == 'pending' %}badge-blue{% elif item.status == 'Sedang Diproses' %}badge-warning{% elif item.status == 'Selesai' %}badge-green{% else %}badge-red{% endif %}">
-                                        {% if item.status == 'pending' %}Menunggu Verifikasi{% else %}{{ item.status }}{% endif %}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a class="btn-action btn-blue" href="{{ url_for('detail_pengaduan', id=item.id_complaint) }}">Detail</a>
-                                        <a class="btn-action btn-red" href="{{ url_for('hapus_pengaduan', id=item.id_complaint) }}" onclick="return confirm('Yakin ingin menghapus pengaduan ini?')">Hapus</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 30px;">Belum ada pengaduan.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination">
-                    <span class="page-link">Sebelumnya</span>
-                    <span class="page-number active">1</span>
-                    <span class="page-number">2</span>
-                    <span class="page-number">3</span>
-                    <span class="page-link">Berikutnya</span>
-                    <button class="btn-page-open">Buka halaman</button>
-                </div>
-            </div>
-        </main>
+{% block content %}
+<div class="card content-card">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <form class="search-box" method="GET" action="{{ url_for('pengaduan_saya') }}">
+            <input type="text" name="q" placeholder="Cari pengaduan..." value="{{ search_query|default('') }}">
+            <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+        </form>
+        <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Sedang Diproses</option>
+            <option>Selesai</option>
+        </select>
     </div>
-</body>
-</html>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID Pengaduan</th>
+                    <th>Judul</th>
+                    <th>Deskripsi</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in pengaduan_list %}
+                <tr>
+                    <td>TRK-{{ item.id_complaint }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.deskripsi[:80] }}{% if item.deskripsi|length > 80 %}...{% endif %}</td>
+                    <td>
+                        <span class="badge {% if item.status == 'pending' %}badge-blue{% elif item.status == 'Sedang Diproses' %}badge-warning{% elif item.status == 'Selesai' %}badge-green{% else %}badge-red{% endif %}">
+                            {% if item.status == 'pending' %}Menunggu Verifikasi{% else %}{{ item.status }}{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a class="btn-action btn-blue" href="{{ url_for('detail_pengaduan', id=item.id_complaint) }}">Detail</a>
+                            <a class="btn-action btn-red" href="{{ url_for('hapus_pengaduan', id=item.id_complaint) }}" 
+                               onclick="return confirm('Yakin ingin menghapus pengaduan ini?')">Hapus</a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px;">Belum ada pengaduan.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <span class="page-link">Sebelumnya</span>
+        <span class="page-number active">1</span>
+        <span class="page-number">2</span>
+        <span class="page-number">3</span>
+        <span class="page-link">Berikutnya</span>
+    </div>
+</div>
+{% endblock %}

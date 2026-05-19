@@ -1,147 +1,93 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pengaduan Saya - SipMas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-container">
-                    <i class="fas fa-shield-alt logo-icon"></i>
-                    <h3>SipMas</h3>
-                </div>
+{% extends "dashboard.html" %}
+
+{% block title %}Riwayat Pengaduan - SipMas{% endblock %}
+{% block active_page %}riwayat{% endblock %}
+{% block page_title %}Riwayat Pengaduan Saya{% endblock %}
+
+{% block content %}
+<div class="riwayat-header">
+    <button class="btn-ekspor">
+        <i class="fas fa-download"></i> Ekspor ke Excel
+    </button>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-grid-riwayat">
+    <div class="stat-card-riwayat stat-total">
+        <div class="stat-label">Total Pengaduan</div>
+        <div class="stat-value">{{ stats.total }}</div>
+    </div>
+    <div class="stat-card-riwayat stat-selesai">
+        <div class="stat-label">Selesai</div>
+        <div class="stat-value">{{ stats.selesai }}</div>
+    </div>
+    <div class="stat-card-riwayat stat-belum">
+        <div class="stat-label">Belum Selesai</div>
+        <div class="stat-value">{{ stats.belum_selesai }}</div>
+    </div>
+    <div class="stat-card-riwayat stat-avg">
+        <div class="stat-label">Rata-rata Waktu Penyelesaian</div>
+        <div class="stat-value">{{ stats.avg_time }}</div>
+        <div class="stat-sublabel">Hari</div>
+    </div>
+</div>
+
+<div class="riwayat-content">
+    <div class="timeline-section">
+        {% for item in riwayat_list %}
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <div class="complaint-id">TRK-{{ item.id }} - {{ item.created_at.strftime('%d %b %Y') }}</div>
+                <div class="complaint-desc">{{ item.judul[:60] }}...</div>
             </div>
-            <nav class="sidebar-nav">
-                <a href="{{ url_for('dashboard') }}" class="nav-item">
-                    <i class="fas fa-home"></i><span>Beranda</span>
-                </a>
-                <a href="{{ url_for('form_pengaduan') }}" class="nav-item">
-                    <i class="fas fa-edit"></i><span>Form pengaduan</span>
-                </a>
-                <a href="{{ url_for('pengaduan_saya') }}" class="nav-item">
-                    <i class="fas fa-folder"></i><span>Pengaduan saya</span>
-                </a>
-                <a href="{{ url_for('riwayat') }}" class="nav-item active">
-                    <i class="fas fa-history"></i><span>Riwayat</span>
-                </a>
-                <a href="{{ url_for('logout') }}" class="nav-item nav-logout">
-                    <i class="fas fa-sign-out-alt"></i><span>Keluar</span>
-                </a>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="riwayat-header">
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="stats-grid-riwayat">
-                <div class="stat-card-riwayat stat-total">
-                    <div class="stat-label">Total Pengaduan</div>
-                    <div class="stat-value">{{ stats.total }}</div>
-                    <div class="stat-sublabel">Siprosral</div>
-                </div>
-                <div class="stat-card-riwayat stat-selesai">
-                    <div class="stat-label">Selesai</div>
-                    <div class="stat-value">{{ stats.selesai }}</div>
-                    <div class="stat-sublabel">Sueretal</div>
-                </div>
-                <div class="stat-card-riwayat stat-belum">
-                    <div class="stat-label">Belum Selesai</div>
-                    <div class="stat-value">{{ stats.belum_selesai }}</div>
-                    <div class="stat-sublabel">Diproses</div>
-                </div>
-                <div class="stat-card-riwayat stat-avg">
-                    <div class="stat-label">Rata-rata Waktu</div>
-                    <div class="stat-value">{{ stats.avg_time }}</div>
-                    <div class="stat-sublabel">Menit</div>
-                </div>
-            </div>
-
-            <!-- Complaint List -->
-            <div class="riwayat-content">
-                <div class="timeline-section">
-                    {% for item in riwayat_list %}
-                    <div class="timeline-item">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <div class="complaint-id">{{ item.id }}-{{ item.created_at.strftime('%d-%m-%Y') }}</div>
-                            <div class="complaint-desc">{{ item.judul[:50] }}...</div>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="no-data">
-                        <i class="fas fa-inbox"></i>
-                        <p>Belum ada riwayat pengaduan</p>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <div class="complaint-details">
-                    {% for item in riwayat_list %}
-                    <div class="complaint-card">
-                        <div class="complaint-header">
-                            <h3>{{ item.judul }}</h3>
-                            <span class="badge {% if item.status == 'Selesai' %}badge-success{% else %}badge-warning{% endif %}">
-                                {{ item.status }}
-                            </span>
-                        </div>
-                        <div class="complaint-code">TRK-{{ item.id }}-{{ item.created_at.strftime('%Y') }}</div>
-                        
-                        <!-- Progress Bar -->
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill {% if item.status == 'Selesai' %}progress-complete{% else %}progress-pending{% endif %}"></div>
-                            </div>
-                            <div class="progress-dots">
-                                <span class="dot active"></span>
-                                <span class="dot {% if item.status != 'pending' %}active{% endif %}"></span>
-                                <span class="dot {% if item.status == 'Selesai' %}active{% endif %}"></span>
-                            </div>
-                        </div>
-
-                        <div class="complaint-actions">
-                            {% if item.status == 'Selesai' %}
-                            <button class="btn-status btn-selesai">Selesai</button>
-                            <button class="btn-pdf" onclick="downloadPDF({{ item.id }})">
-                                <i class="fas fa-download"></i> Unduh PDF
-                            </button>
-                            {% else %}
-                            <button class="btn-status btn-belum">Belum</button>
-                            <button class="btn-status btn-proses">Proses</button>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Filter -->
-            <div class="filter-section">
-                <label>Filter Tanggal</label>
-                <select class="filter-select">
-                    <option>Status: Semua/Selesai/Belum Selesai</option>
-                    <option>Selesai</option>
-                    <option>Belum Selesai</option>
-                </select>
-            </div>
-        </main>
+        </div>
+        {% else %}
+        <div class="no-data">
+            <i class="fas fa-inbox"></i>
+            <p>Belum ada riwayat pengaduan</p>
+        </div>
+        {% endfor %}
     </div>
 
-    <script>
-        function downloadPDF(id) {
-            // Implementasi download PDF
-            alert('Mengunduh PDF untuk pengaduan #' + id);
-            // window.open('/download-pdf/' + id, '_blank');
-        }
-    </script>
-</body>
-</html>
+    <div class="complaint-details">
+        {% for item in riwayat_list %}
+        <div class="complaint-card">
+            <div class="complaint-header">
+                <h3>{{ item.judul }}</h3>
+                <span class="badge {% if item.status == 'Selesai' %}badge-success{% else %}badge-warning{% endif %}">
+                    {{ item.status }}
+                </span>
+            </div>
+            <div class="complaint-code">TRK-{{ item.id }}-{{ item.created_at.strftime('%Y') }}</div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill {% if item.status == 'Selesai' %}progress-complete{% else %}progress-pending{% endif %}"></div>
+                </div>
+            </div>
+
+            <div class="complaint-actions">
+                {% if item.status == 'Selesai' %}
+                <button class="btn-status btn-selesai">Selesai</button>
+                <button class="btn-pdf" onclick="downloadPDF({{ item.id }})">
+                    <i class="fas fa-download"></i> Unduh PDF
+                </button>
+                {% else %}
+                <button class="btn-status btn-proses">Sedang Diproses</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function downloadPDF(id) {
+        alert('Mengunduh PDF untuk pengaduan #' + id);
+        // window.open('/download-pdf/' + id, '_blank');
+    }
+</script>
+{% endblock %}
