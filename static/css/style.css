@@ -1467,6 +1467,7 @@ input:checked + .slider:before {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+<<<<<<< HEAD
 /* dashboard admin */
 .root {
   position: relative;
@@ -2706,3 +2707,5 @@ button{
 button:hover{
     background: #39b866;
 }
+=======
+>>>>>>> c25201c9805a754ebc15fa0245b734fed775d92e
